@@ -1,0 +1,28 @@
+R1:
+
+Map Phase:
+edge -> [partition_id, edge]
+For a=3456, b=789 and C=4, we get the following mapping:
+0,1 -> [1, (0,1)]
+0,2 -> [1, (0,2)]
+1,2 -> [1, (1,2)]
+1,3 -> /
+1,4 -> /
+2,3 -> /
+3,4-> [2, (3,4)]
+
+Reduce Phase:
+for every j e [0,C), Lj = list of values from intermediate pairs with key j
+(j, Lj) -> (0, c_j = CountTriangles(Lj))
+
+(1, [(0,1), (0,2), (1,2)]) -> (0, 1)
+(2, [(3,4)]) -> (0,0)
+
+R2:
+
+Map Phase: / (empty)
+Reduce Phase:
+Lo =  list of c_j's
+(0, Lo) -> (0, sum of elements of Lo)
+
+(0, [1, 0]) -> (0,1)
