@@ -1,0 +1,117 @@
+(u, v) -> (ki, (u, v)) -> i e [0, C-1] => we divide into max C partitions
+ki = (hc(u), hc(v), i) -> sorted in a non decreasing order
+Lk - list of intermediate pairs (edges with key k)
+tk = countTriangles(Lk)
+
+Given C=3, and edges:
+(a,b)
+(a,c)
+(b,c)
+(b,d)
+(c,d)
+(c,e)
+(d,e)
+
+After applying the hash function, we get:
+hc(a)=0
+hc(b)=hc(c)=hc(d)=1
+hc(e)=2
+
+(a,b) = (0,1)
+(a,c) = (0,1)
+(b,c) = (1,1)
+(b,d) = (1,1)
+(c,d) = (1,1)
+(c,e) = (1,2)
+(d,e) = (1,2)
+
+Next we add k to each of them (k=0,1,2):
+(0,1,0), (a,b)
+(0,1,1), (a,b)
+(0,1,2), (a,b)
+
+(0,1,0), (a,c)
+(0,1,1), (a,c)
+(0,1,2), (a,c)
+
+(1,1,0), (b,c)
+(1,1,1), (b,c)
+(1,1,2), (b,c)
+
+(1,1,0), (b,d)
+(1,1,1), (b,d)
+(1,1,2), (b,d)
+
+(1,1,0), (c,d)
+(1,1,1), (c,d)
+(1,1,2), (c,d)
+
+
+(1,2,0), (c,e)
+(1,2,1), (c,e)
+(1,2,2), (c,e)
+
+(1,2,0), (d,e)
+(1,2,1), (d,e)
+(1,2,2), (d,e)
+
+But they have to be sorted, so we sort:
+(0,0,1), (a,b)
+(0,1,1), (a,b)
+(0,1,2), (a,b)
+
+(0,0,1), (a,c)
+(0,1,1), (a,c)
+(0,1,2), (a,c)
+
+(0,1,1), (b,c)
+(1,1,1), (b,c)
+(1,1,2), (b,c)
+
+(0,1,1), (b,d)
+(1,1,1), (b,d)
+(1,1,2), (b,d)
+
+(0,1,1), (c,d)
+(1,1,1), (c,d)
+(1,1,2), (c,d)
+
+(0,1,2), (c,e)
+(1,1,2), (c,e)
+(1,2,2), (c,e)
+
+(0,1,2), (d,e)
+(1,1,2), (d,e)
+(1,2,2), (d,e)
+
+Lets group by key:
+
+L(0,0,1) = [(a,b), (a,c)]
+L(0,1,1) = [(a,b), (a,c), (b,c), (b,d), (c,d)]
+L(0,1,2) = [(a,b), (a,c), (c,e), (d,e)]
+L(1,1,1) = [(b,c), (b,d), (c,e)]
+L(1,1,2) = [(b,c), (b,d), (c,d), (c,e), (d,e)]
+L(1,2,2) = [(c,e), (d,e)]
+
+Round 1 Map Phase ends here!
+
+Round 1 Reduce Phase: Lk -> (0, c_k = CountTriangles(Lk))
+
+t(0,0,1) = CountTriangles(L(0,0,1)) = 0
+t(0,1,1) = CountTriangles(L(0,1,1)) = 1 (abc)
+t(0,1,2) = CountTriangles(L(0,1,2)) = 0
+t(0,1,2) = CountTriangles(L(1,1,1)) = 1 (bdc)
+t(1,1,2) = CountTriangles(L(1,1,2)) = 1 (cde)
+t(1,2,2) = CountTriangles(L(1,2,2)) = 0
+
+(0,1)
+(0,1)
+(0,1)
+
+Round 2: Group by key [0, Lj]
+[0, [1,1,1]]
+
+Sum elements in Lj:
+[0,Lj] - > [0, sumElements(Lj)]
+
+return sum
